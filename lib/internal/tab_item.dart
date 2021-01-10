@@ -13,7 +13,7 @@ class TabItem extends StatefulWidget {
   final String title;
 
   /// This icon is used as Tab icon
-  final IconData iconData;
+  final Image icon;
 
   /// This bool is used to know if the respective tab is selected or not
   final bool selected;
@@ -53,7 +53,7 @@ class TabItem extends StatefulWidget {
 
   TabItem(
       {@required this.selected,
-      @required this.iconData,
+      @required this.icon,
       @required this.title,
       @required this.callbackFunction,
       @required this.textColor,
@@ -114,10 +114,8 @@ class _TabItemState extends State<TabItem> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Icon(
-                widget.iconData,
-                color: iconColor,
-              ),
+              
+                widget.icon,
               SizedBox(width: 8.0),
               AnimatedContainer(
                 duration: Duration(milliseconds: kAnimationDuration),
