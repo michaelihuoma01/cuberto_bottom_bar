@@ -70,8 +70,8 @@ class CubertoBottomBar extends StatefulWidget {
 }
 
 class CubertoBottomBarState extends State<CubertoBottomBar> {
-  IconData nextIcon = Icons.search;
-  IconData activeIcon = Icons.search;
+  Image nextIcon;
+  Image activeIcon;
   int currentSelected = 0;
   double _circleAlignX = 0;
   Color circleColor;
@@ -87,7 +87,7 @@ class CubertoBottomBarState extends State<CubertoBottomBar> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    activeIcon = widget.tabs[currentSelected].iconData;
+    activeIcon = widget.tabs[currentSelected].icon;
     barBackgroundColor = (widget.barBackgroundColor == null)
         ? (Theme.of(context).brightness == Brightness.dark)
             ? Color(0xFF212121)
@@ -136,12 +136,13 @@ class CubertoBottomBarState extends State<CubertoBottomBar> {
   }
 
   _setSelected(Key key) {
-    int selected = widget.tabs.indexWhere((tabData) => tabData.key.toString() == key.toString());
+    int selected = widget.tabs
+        .indexWhere((tabData) => tabData.key.toString() == key.toString());
     if (mounted) {
       setState(() {
         currentSelected = selected;
         _circleAlignX = -1 + (2 / (widget.tabs.length - 1) * selected);
-        nextIcon = widget.tabs[selected].iconData;
+        nextIcon = widget.tabs[selected].icon;
       });
     }
   }
@@ -211,12 +212,11 @@ class CubertoBottomBarState extends State<CubertoBottomBar> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: tabs
-            .map((t) =>
-                TabItem(
+            .map((t) => TabItem(
                   key: t.key,
                   tabStyle: tabStyle,
                   selected: t.key == tabs[currentSelected].key,
-                  iconData: t.iconData,
+                  icon: t.icon,
                   title: t.title,
                   iconColor: inactiveIconColor,
                   textColor: textColor,
@@ -224,8 +224,8 @@ class CubertoBottomBarState extends State<CubertoBottomBar> {
                   tabColor: t.tabColor == null ? inactiveIconColor : t.tabColor,
                   borderRadius: t.borderRadius,
                   callbackFunction: (uniqueKey) {
-                    int selected =
-                        tabs.indexWhere((tabData) => tabData.key.toString() == uniqueKey.toString());
+                    int selected = tabs.indexWhere((tabData) =>
+                        tabData.key.toString() == uniqueKey.toString());
                     _setSelected(uniqueKey);
                     _initAnimationAndStart(_circleAlignX, 1);
                     onTabChangedListener(selected, t.title, inactiveIconColor);
@@ -282,7 +282,7 @@ class CubertoBottomBarState extends State<CubertoBottomBar> {
 
 class TabData {
   /// This iconData will be used in the Tab
-  IconData iconData;
+  Image icon;
 
   /// This string will be used as the text inside the Tab
   String title;
@@ -302,21 +302,19 @@ class TabData {
   /// This key is used as unique value to the Tab (if not set default UniqueKey will be added to the Tab)
   Key key;
 
-
   TabData(
-      {@required this.iconData,
+      {@required this.icon,
       @required this.title,
       this.onclick,
       this.tabColor,
       this.borderRadius,
       this.tabGradient,
-      this.key }) { key = key == null ?  UniqueKey() : key;}
-
-
+      this.key}) {
+    key = key == null ? UniqueKey() : key;
+  }
 }
 
 class CubertoDrawer {
-
   /// This icon will be used as the drawer icon
   final Icon icon;
 
